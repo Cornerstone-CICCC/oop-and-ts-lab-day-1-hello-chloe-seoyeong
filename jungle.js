@@ -1,3 +1,4 @@
+// Base class
 class Animal {
   static remainingAnimals = 0;
   #name;
@@ -8,7 +9,7 @@ class Animal {
     this.#name = name;
     this.#species = species;
     Animal.remainingAnimals++;
-    this.energy = 0;
+    this.energy = 0; // necessary or not?
   }
 
   get name() {
@@ -32,16 +33,8 @@ class Animal {
     this.#energy = energy;
   }
 
+  // check energy left or not
   checkAvaiable(target) {
-    // if(target.energy <= 0) {
-    //   console.log(`${target.name} has already lost. No longer to fight.`);
-    //   return false;
-    // } else if(this.energy <= 0) {
-    //   console.log(`${this.name} has already lost. No longer to fight.`);
-    //   return false;
-    // } else {
-    //   return true;
-    // }
     if(target.energy <= 0 || this.energy <= 0) {
       const checkMessgae = `${target.energy <= 0 ? target.name : this.name} has already lost. No longer to fight.`;
       console.log(`${checkMessgae}`);
@@ -52,15 +45,14 @@ class Animal {
   }
 
   attack(target) {
-    if(target.energy <= 0) {
-      console.log(`${this.name} has won!`);
-      console.log(`${target.name}'s energy: ${target.energy}`);
-      console.log(`${this.name}'s energy: ${this.energy}`);
-      Animal.remainingAnimals--;
-    } else if(target.energy <= 0) {
-      console.log(`${target.name} has won!`);
-      console.log(`${this.name}'s energy: ${this.energy}`);
-      console.log(`${target.name}'s energy: ${target.energy}`);
+    if(target.energy <= 0 || this.energy <= 0) {
+      const el = target.energy <= 0 ? this : target;
+      const targetEl = !target.energy <= 0 ? this : target;
+
+      console.log(`${el.name} has won!`);
+      console.log(`${targetEl.name}'s energy: ${targetEl.energy}`);
+      console.log(`${el.name}'s energy: ${el.energy}`);
+
       Animal.remainingAnimals--;
     } else {
       console.log(`${this.name}'s energy: ${this.energy}`);
@@ -69,7 +61,6 @@ class Animal {
   }
 
   eat() {
-    // this.#energy += 10;
     const gainEnergyMessage = `${this.name} eats and gains energy!`;
     const numberOfEnergy = `${this.name}'s energy: ${this.energy}`;
     console.log(`${gainEnergyMessage} \n${numberOfEnergy}`);
@@ -132,8 +123,6 @@ class Mammal extends Animal {
       this.energy -= 50;
       target.energy -= 50;
       super.attack(target);
-      // console.log(`${this.name}'s energy: ${this.energy}`);
-      // console.log(`${target.name}'s energy: ${target.energy}`);
     }
     super.checkAvaiable(target);
   }
@@ -165,8 +154,6 @@ class Reptile extends Animal {
       this.energy -= 30;
       target.energy -= 30;
       super.attack(target);
-      // console.log(`${this.name}'s energy: ${this.energy}`);
-      // console.log(`${target.name}'s energy: ${target.energy}`);
     }
   }
 
@@ -191,17 +178,18 @@ console.log(`Name: ${snake.name}, Species: ${snake.species}, Energy: ${eagle.ene
 // Example attack
 console.log("\n--- Attacks ---");
 eagle.attack(lion);
-snake.attack(lion);
-snake.attack(lion);
-snake.attack(lion);
-snake.attack(lion);
-snake.attack(lion);
+lion.attack(snake);
+lion.attack(snake);
+snake.attack(eagle);
 
 // Display the remaining number of animals with energy
-console.log(`\n Remaining animals with energy: ${Animal.remainingAnimals}`);
+console.log(`\nRemaining animals with energy: ${Animal.remainingAnimals}`);
 
 // Example eating
 console.log("\n--- Eating ---");
 eagle.eat();
 lion.eat();
+lion.eat();
+snake.eat();
+snake.eat();
 snake.eat();
